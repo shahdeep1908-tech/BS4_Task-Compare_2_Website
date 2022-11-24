@@ -11,9 +11,9 @@ def check_text():
     form = BlogForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flag = utils.get_urls(form.blog_url.data, form.jidipi_url.data)
-            return render_template('index.html', form=form, flag=flag)
-        return render_template('index.html', form=form)
+            flag, blog_string, jidipi_string = utils.get_urls(form.blog_url.data, form.jidipi_url.data)
+            return render_template('index.html', form=form, flag=flag, blog_string=blog_string,
+                                   jidipi_string=jidipi_string)
     return render_template('index.html', form=form)
 
 
