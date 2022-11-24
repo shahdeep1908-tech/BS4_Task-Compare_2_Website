@@ -3,15 +3,6 @@ import unicodedata
 
 import requests
 from bs4 import BeautifulSoup
-from difflib import SequenceMatcher
-
-
-def mismatch():
-    """
-    Set the difference for Minor Mismatch with two strings.
-    """
-    # SequenceMatcher(a=a, b=b).ratio()
-    pass
 
 
 def check_sequence_of_data(blog_txt_lst, jidipi_txt_lst):
@@ -75,9 +66,4 @@ def get_urls(blog_url, jidipi_url):
 
     status = check_sequence_of_data(blog_txt.split('.'), jidipi_txt.split('.'))
 
-    return status
-
-# blog_url = "https://www.archdaily.com/938054/chinese-culture-exhibition-center-qingdao-tengyuan-design-plus-eca2"
-# blog_url = "https://www.archdaily.com/246905/villa-jian-cu-office?ad_source=search&ad_medium=projects_tab"
-# jidipi_url = "https://architectures.jidipi.com/j00063373/en/chinese-culture-exhibition-center"
-# jidipi_url = "https://architectures.jidipi.com/j00030499/en/villa-jian"
+    return status, blog_txt, jidipi_txt
