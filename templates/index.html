@@ -101,6 +101,11 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
+                    {% if flag == 'Invalid' and not blog_string %}
+                    <ul class="alert alert-danger errors">
+                        <li>This is Invalid URL</li>
+                    </ul>
+                    {% endif %}
                     <div class="form-outline mb-4 was-validated">
                         <label for="blog-url">Blog URL</label>
                         <div class="input-group mb-3 was-validated">
@@ -116,6 +121,11 @@
                         {% for error in form.jidipi_url.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if flag == 'Invalid' and not jidipi_string %}
+                    <ul class="alert alert-danger mt-5 errors">
+                        <li>This is Invalid URL</li>
                     </ul>
                     {% endif %}
                     <div class="form-outline mb-4 was-validated">
@@ -158,14 +168,14 @@
                     <span class="d-inline-block btn float-left"><i class="bi bi-1-circle-fill"></i></span>
                     {% if flag == True %}
                     <span class="card-body d-inline-block p-2">
-                        <h3 class="card-title">Success</h3>
-                        <p>All the contents are in correct order.</p>
-                    </span>
+                            <h3 class="card-title">Success</h3>
+                            <p>All the contents are in correct order.</p>
+                        </span>
                     {% elif flag == False %}
                     <span class="card-body d-inline-block p-2">
-                        <h3 class="card-title">Error</h3>
-                        <p class="card-text">Contents should be in Incorrect Order.</p>
-                    </span>
+                            <h3 class="card-title">Error</h3>
+                            <p class="card-text">Contents should be in Incorrect Order.</p>
+                        </span>
                     {% else %}
                     <span class="card-body d-inline-block p-2">
                             <h3 class="card-title">Check Blog Order</h3>
