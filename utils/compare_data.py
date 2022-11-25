@@ -38,6 +38,14 @@ def get_urls(blog_url, jidipi_url):
     blog = get_blog_url_data(blog_url, headers)
     jidipi = get_jidipi_url_data(jidipi_url, headers)
 
+    if not blog and not jidipi or blog and jidipi == "Invalid URL" or not blog and jidipi == "Invalid URL" \
+            or not jidipi and blog == "Invalid URL":
+        return "Invalid", '', ''
+    if blog == "Invalid URL" or not blog:
+        return "Invalid", '', jidipi
+    if jidipi == "Invalid URL" or not jidipi:
+        return "Invalid", blog, ''
+
     """
     Eliminate extra spaces [If Any] using Regex.
     Unidecode data to remove ascii space.
