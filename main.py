@@ -35,7 +35,3 @@ def split_data():
             return render_template('split_blog_data.html', form=form, status=status, data_lst=data_lst,
                                    max_data=max_data)
     return render_template('split_blog_data.html', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
