@@ -37,7 +37,6 @@ def get_blog_url_data(url, headers):
 
 
 def get_system_jidipi_data(driver, url):
-    print(driver, url)
     time.sleep(1)
     driver.get(url)
     WebDriverWait(driver, 3).until(
@@ -52,7 +51,6 @@ def get_system_jidipi_data(driver, url):
             unnecessary_tag = txt.find_element(By.XPATH, './..').get_attribute('innerHTML')
             if '<strong' in txt.get_attribute('innerHTML') or '<h4' in unnecessary_tag or not txt.text:
                 continue
-            print(txt.text)
             jidipi_result.append(re.sub(r'\n', '', txt.text))
     return jidipi_result
 
@@ -67,6 +65,7 @@ def get_jidipi_url_data(url):
     options = Options()
     options.headless = True
     options.add_argument("--window-size=1920,1200")
+    options.add_argument('--lang=en_US')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
     try:
