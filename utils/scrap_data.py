@@ -1,3 +1,5 @@
+import os
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -11,7 +13,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def get_blog_url_data(url, headers):
@@ -37,14 +41,14 @@ def get_blog_url_data(url, headers):
 
 
 def get_system_jidipi_data(driver, url):
-    time.sleep(1)
+    time.sleep(2)
     driver.get(url)
-    WebDriverWait(driver, 3).until(
+    WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="area-tooltip"]/div[1]/button[1]')))
 
     jidipi_result = []
     driver.find_element(By.XPATH, '//*[@id="area-tooltip"]/div[1]/button[1]').click()
-    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "setka-editor")))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "setka-editor")))
 
     for parent in driver.find_elements(By.ID, 'setka-editor'):
         for txt in parent.find_elements(By.CSS_SELECTOR, 'p[data-ce-tag="paragraph"]'):
@@ -62,26 +66,42 @@ def get_jidipi_url_data(url):
     :param headers: Chrome Header
     :return: List of Jidipi para Text.
     """
-    options = Options()
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+
+    options = webdriver.ChromeOptions()
     options.headless = True
-    options.add_argument("--window-size=1920,1200")
-    options.add_argument('--lang=en_US')
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    options.add_argument(f'user-agent={user_agent}')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-gpu')
+
+    """
+    Uncomment Below Code if any errors Related to Driver comes in action.
+    """
+    # options.add_argument("--window-size=1920,1080")
+    # options.add_argument('--ignore-certificate-errors')
+    # options.add_argument('--allow-running-insecure-content')
+    # options.add_argument("--disable-extensions")
+    # options.add_argument("--proxy-server='direct://'")
+    # options.add_argument("--proxy-bypass-list=*")
+    # options.add_argument("--start-maximized")
+    # options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
     try:
         driver.get(url)
-        WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "input-field ")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "input-field ")))
 
         if driver.current_url == url:
             get_system_jidipi_data(driver, url)
         elif driver.current_url == "https://system.jidipi.com/login":
             email = driver.find_element(By.CLASS_NAME, "input-field ")
-            email.send_keys("dipen2soni@gmail.com")
+            email.send_keys(os.environ.get('EMAIL'))
 
             password = driver.find_element(By.CLASS_NAME, "form-control")
-            password.send_keys("goldeneye123")
+            password.send_keys(os.environ.get('PASSWORD'))
 
-            WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.CLASS_NAME, "btn")))
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "btn")))
 
             submit = driver.find_element(By.CLASS_NAME, "btn")
             submit.click()

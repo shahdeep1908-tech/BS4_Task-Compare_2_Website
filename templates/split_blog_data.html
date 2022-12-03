@@ -47,7 +47,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="{{ url_for('split_data') }}">Split Data <span
+                    <a class="nav-item nav-link active" href="{{ url_for('split_data') }}">Data Division <span
                             class="sr-only">(current)</span></a>
                 </div>
             </div>
@@ -124,7 +124,7 @@
             {% for blog_str in data_lst %}
             <tr class="header_style">
                 <td>{{ loop.index }}</td>
-                <td id="blog_txt">{{ blog_str }}.</td>
+                <td id="blog_txt">{{ blog_str }}</td>
                 <td class="clipboard_card">
                     <a style="float: right; font-size: 24px;" href="#" onclick="copyText(this)">
                         <i class="fa fa-clipboard"></i>

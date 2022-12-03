@@ -10,16 +10,40 @@ def check_max_sentences(blog_txt, spliting_parts):
     :param spliting_parts: No of Splitting chunks required
     :return: Sliced data and max_length_of chunks that can be made.
     """
+    punctuation = '.?!;'
     blog_lst = blog_txt.split('.')
-    max_length_of_data = len(blog_lst)
+    cleaned_blog_lst = []
+    temp_string = ''
+    for sentences_idx in range(len(blog_lst)):
+        sentence = blog_lst[sentences_idx].strip()
+        if len(sentence) < 10:
+            temp_string = temp_string + sentence + '.'
+            continue
+        else:
+            if temp_string:
+                sentence = temp_string + sentence
+                temp_string = ''
+            if sentence[-1] in punctuation or sentence[-2] in punctuation:
+                cleaned_blog_lst.append(sentence)
+                continue
+            cleaned_blog_lst.append(sentence + '.')
+
+    max_length_of_data = len(cleaned_blog_lst)
 
     if spliting_parts > max_length_of_data:
         return False, '', max_length_of_data
     sliced_data = []
-    chunks = math.ceil(max_length_of_data / spliting_parts)
+
+    """
+    Change the floor to ceil, If you want the minimum number of sentences to
+    be joined together as a paragraph.
+    """
+    chunks = math.floor(max_length_of_data / spliting_parts)
     idx = 0
     for i in range(spliting_parts):
-        sliced_data.append(''.join(blog_lst[idx:idx + chunks]))
+        final_txt = ''.join(cleaned_blog_lst[idx:idx + chunks])
+        if final_txt:
+            sliced_data.append(final_txt)
         idx += chunks
     return True, sliced_data, ''
 
