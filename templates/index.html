@@ -155,54 +155,56 @@
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
-        {% if flag == True %}
-        <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-success">
-            {% elif flag == False %}
-            <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-danger">
-                {% else %}
-                <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-primary">
-                    {% endif %}
-                    <span class="d-inline-block btn float-left"><i class="bi bi-1-circle-fill"></i></span>
-                    {% if flag == True %}
-                    <span class="card-body d-inline-block p-2">
-                            <h3 class="card-title">Success</h3>
-                            <p>All the contents are in correct order.</p>
-                        </span>
-                    {% elif flag == False %}
-                    <span class="card-body d-inline-block p-2">
-                            <h3 class="card-title">Error</h3>
-                            <p class="card-text">Contents are in Incorrect Order.</p>
-                        </span>
-                    {% else %}
-                    <span class="card-body d-inline-block p-2">
-                            <h3 class="card-title">Check Blog Order</h3>
-                            <p class="card-text">It will check Sequence of paragraph from JIDIPI Url with Blog Url.</p>
-                        </span>
-                    {% endif %}
-                </div>
+<!--<div class="container-fluid">-->
+<!--    <div class="row">-->
+<!--        {% if flag == True %}-->
+<!--        <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-success">-->
+<!--            {% elif flag == False %}-->
+<!--            <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-danger">-->
+<!--                {% else %}-->
+<!--                <div class="card-header w-100 p-0 ml-5 mr-5 alert alert-primary">-->
+<!--                    {% endif %}-->
+<!--                    <span class="d-inline-block btn float-left"><i class="bi bi-1-circle-fill"></i></span>-->
+<!--                    {% if flag == True %}-->
+<!--                    <span class="card-body d-inline-block p-2">-->
+<!--                            <h3 class="card-title">Success</h3>-->
+<!--                            <p>All the contents are in correct order.</p>-->
+<!--                        </span>-->
+<!--                    {% elif flag == False %}-->
+<!--                    <span class="card-body d-inline-block p-2">-->
+<!--                            <h3 class="card-title">Error</h3>-->
+<!--                            <p class="card-text">Contents are in Incorrect Order.</p>-->
+<!--                        </span>-->
+<!--                    {% else %}-->
+<!--                    <span class="card-body d-inline-block p-2">-->
+<!--                            <h3 class="card-title">Check Blog Order</h3>-->
+<!--                            <p class="card-text">It will check Sequence of paragraph from JIDIPI Url with Blog Url.</p>-->
+<!--                        </span>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<hr>
+{% if flag == True or flag == False%}
+    <div class="mt-5 container output-container">
+        <div class="left">
+            <div class="txt">
+                <b><p class="">BLOG TEXT</p></b>
+            </div>
+            <div id="leftOutput" class="mt-5 output">
+            </div>
+        </div>
+        <div class="right">
+            <div class="txt">
+                <b><p class="">JIDIPI TEXT</p></b>
+            </div>
+            <div id="rightOutput" class="mt-5 output">
             </div>
         </div>
     </div>
-</div>
-<div class="container output-container">
-    <div class="left">
-        <div class="txt">
-            <b><p class="">BLOG TEXT</p></b>
-        </div>
-        <div id="leftOutput" class="mt-5 output">
-        </div>
-    </div>
-    <div class="right">
-        <div class="txt">
-            <b><p class="">JIDIPI TEXT</p></b>
-        </div>
-        <div id="rightOutput" class="mt-5 output">
-        </div>
-    </div>
-</div>
-
+{% endif %}
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
