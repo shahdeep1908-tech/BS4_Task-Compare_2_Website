@@ -10,6 +10,7 @@ app.config['SECRET_KEY'] = 'secret'
 def check_text():
     """
     Match Sequence Endpoint.
+
     :return: Template
     """
     form = BlogForm()
@@ -25,6 +26,7 @@ def check_text():
 def split_data():
     """
     Split data into chunks
+
     :return: Template
     """
     form = SplitDataForm()

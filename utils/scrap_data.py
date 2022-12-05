@@ -21,6 +21,7 @@ load_dotenv()
 def get_blog_url_data(url, headers):
     """
     Scrape the data from Blog URL and return the List of Text.
+
     :param url: Blog Data URL
     :param headers: Chrome Header
     :return: List of text
@@ -41,6 +42,12 @@ def get_blog_url_data(url, headers):
 
 
 def get_system_jidipi_data(driver, url):
+    """
+
+    :param driver: DRIVER OBJECT TO SCRAPE DATA FROM PAGE 2
+    :param url: NEXT PAGE URL
+    :return: LIST OF SENTENCES FETCHED FROM JIDIPI WEBSITE.
+    """
     time.sleep(2)
     driver.get(url)
     WebDriverWait(driver, 10).until(
@@ -62,6 +69,7 @@ def get_system_jidipi_data(driver, url):
 def get_jidipi_url_data(url):
     """
     Scrape the data from Jidipi URL and return the List of Text.
+
     :param url: Jidipi URL
     :param headers: Chrome Header
     :return: List of Jidipi para Text.

@@ -6,6 +6,7 @@ from utils.scrap_data import get_blog_url_data, get_jidipi_url_data
 
 def check_sequence_of_data(blog_txt_lst, jidipi_txt_lst):
     """
+    CHECK THE SEQUENCE OF JIDIPI DATA COMPARED TO BLOG TXT IS CORRECT OR NOT.
 
     :param blog_txt_lst: Blog Text Paragraph
     :param jidipi_txt_lst: Jidipi Text Paragraph
@@ -30,6 +31,13 @@ def check_sequence_of_data(blog_txt_lst, jidipi_txt_lst):
 
 
 def get_urls(blog_url, jidipi_url):
+    """
+    FETCH THE SCRAPPED DATA AND PERFORM SPLIT AND STRIP BASED ON PARAGRAPH TO MAKE PERFECT SENTENCES.
+
+    :param blog_url: LIST OF SENTENCES FROM BLOG URL.
+    :param jidipi_url: LIST OF SENTENCES FROM JIDIPI URL.
+    :return: STATUS OF SEQUENCE AND TEXTS FROM BOTH URL FOR COMPARISON.
+    """
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
 
     """

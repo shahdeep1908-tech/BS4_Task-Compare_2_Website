@@ -6,6 +6,7 @@ import unicodedata
 def check_max_sentences(blog_txt, spliting_parts):
     """
     Get the whole Text. Split it into chunks and return the equally shared chunk Data.
+
     :param blog_txt: Blog URL Data
     :param spliting_parts: No of Splitting chunks required
     :return: Sliced data and max_length_of chunks that can be made.
@@ -49,6 +50,13 @@ def check_max_sentences(blog_txt, spliting_parts):
 
 
 def get_data_to_split(blog_url, data_split_num):
+    """
+    GET THE INPUT OF URL FROM WHICH DATA NEEDS TO BE SCRAPPED, AND THE NUMBER OF SENTENCES FOR SPLIT
+
+    :param blog_url: BLOG URL SCRAPPED DATA
+    :param data_split_num: NUMBER OF SENTENCES TO BE SPLIT INTO.
+    :return: STATUS OF DATA SPLIT, DATA ITSELF, MAX_DATA THAT CAN GE GENERATED
+    """
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
 
     """

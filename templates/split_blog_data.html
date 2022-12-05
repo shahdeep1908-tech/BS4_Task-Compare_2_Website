@@ -39,6 +39,8 @@
 <body>
 <div class="container">
     <div class="row">
+        <!--NAVBAR START-->
+        <!--NAVBAR CODE - THIS HAVE 2 FEATURES : HOMEPAGE FOR COMPARISON | DATA DIVISION FOR SPLITTING INTO SENTENCES-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
             <a class="navbar-brand" href="{{ url_for('check_text') }}">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -52,12 +54,18 @@
                 </div>
             </div>
         </nav>
+        <!--NAVBAR ENDS-->
+
+        <!--FORM DATA START-->
+        <!--FORM-DATA CODE - THIS CONSISTS OF URL INPUT AND NO. OF SENTENCES INPUT IN BASE OF BLOG URL. -->
         <div class="col-md-12">
             <div class="card-body mt-5">
                 <form id="bookingForm" method="POST" action="{{ url_for('split_data') }}"
                       class="needs-validation"
                       novalidate autocomplete="off">
                     {{ form.csrf_token }}
+
+                    <!--SHOWS ERRORS IN BLOG URL INPUTS-->
                     {% if form.blog_url.errors %}
                     <ul class="alert alert-danger errors">
                         {% for error in form.blog_url.errors %}
@@ -65,6 +73,9 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
+                    <!--BLOG URL ERRORS ENDS-->
+
+                    <!--BLOG URL INPUT FORM FIELD-->
                     <div class="form-outline mb-4 was-validated">
                         <label for="blog-url">Blog URL</label>
                         <div class="input-group mb-3 was-validated">
@@ -75,6 +86,9 @@
                             {{ form.blog_url(class_="form-control") }}
                         </div>
                     </div>
+                    <!--BLOG URL INPUT FIELD ENDS-->
+
+                    <!--SHOWS ERROR IN NUMBER OF SENTENCES INPUTS-->
                     {% if form.data_split_num.errors %}
                     <ul class="alert alert-danger mt-5 errors">
                         {% for error in form.data_split_num.errors %}
@@ -82,6 +96,9 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
+                    <!--SENTENCES RELATED ERRORS ENDS-->
+
+                    <!--INTEGER FIELD FOR SENTENCES FORM FIELD-->
                     <div class="form-outline mb-4 was-validated">
                         <label for="data_split_num">No. of Sentences </label>
                         <div class="input-group mb-3">
@@ -92,11 +109,15 @@
                             {{ form.data_split_num(class_="form-control col-md-4") }}
                         </div>
                     </div>
+                    <!--SENTENCES FORM FIELD ENDS-->
+
                     <div class="row">
+                        <!--SUBMIT BUTTON-->
                         <div class="col-lg-4 offset-lg-2 text-center">
                             <button class="btn btn-primary btn-block" id="submitButton" type="submit">Submit
                             </button>
                         </div>
+                        <!--CLEAR BUTTON-->
                         <div class="col-lg-4 text-center">
                             <button class="btn btn-danger btn-block" type="button"
                                     onclick="clearInput()">Clear
@@ -106,9 +127,11 @@
                 </form>
             </div>
         </div>
+        <!--FORM-DATA ENDS-->
     </div>
 </div>
 
+<!--TABLE CONSISTING OF DIVISIED SENTENCES AND A BUTTON TO COPY EACH DATA ROW-->
 <div class="container">
     {% if status == True %}
     <h2 class="mt-4">Sliced Data</h2>
@@ -147,7 +170,7 @@
     <div></div>
     {% endif %}
 </div>
-
+<!--TABLE STRUCTURE ENDS-->
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -161,6 +184,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<!--SCRIPT TO CLEAR THE VALUE IN FORM FIELD-->
 <script>
     function clearInput() {
         const getBlogValue = document.getElementById("blog_url");
@@ -173,6 +198,8 @@
         }
     }
 </script>
+
+<!--SCRIPT TO COPY THE CONTENT OF PARTICULAR ROW OF TABLE-->
 <script>
     function copyText(obj) {
         var tmpInput = $("<input>");

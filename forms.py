@@ -6,6 +6,7 @@ from wtforms.validators import InputRequired
 class BlogForm(FlaskForm):
     """
     Form for URL Inputs.
+
     blog_url: URL from where the data comes.
     jidipi_url: URL for which data needs to be checked.
     """
@@ -16,6 +17,7 @@ class BlogForm(FlaskForm):
 class SplitDataForm(FlaskForm):
     """
     Form for Slicing Data Inputs
+
     blog_url: URL from where the data comes.
     data_split_num: No of chunks required
     """
