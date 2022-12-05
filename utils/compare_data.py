@@ -46,6 +46,9 @@ def get_urls(blog_url, jidipi_url):
     blog = get_blog_url_data(blog_url, headers)
     jidipi = get_jidipi_url_data(jidipi_url)
 
+    from .extras import check_extra_dots
+    get_data = check_extra_dots(blog)
+
     if not blog and not jidipi or blog and jidipi == "Invalid URL" or not blog and jidipi == "Invalid URL" \
             or not jidipi and blog == "Invalid URL":
         return "Invalid", '', ''

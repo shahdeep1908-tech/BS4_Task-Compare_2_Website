@@ -64,6 +64,9 @@ def get_data_to_split(blog_url, data_split_num):
     """
     blog = get_blog_url_data(blog_url, headers)
 
+    from .extras import check_extra_dots
+    get_data = check_extra_dots(blog)
+
     """
     Eliminate extra spaces [If Any] using Regex.
     Unidecode data to remove ascii space.
