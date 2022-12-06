@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!--FORM DATA START-->
+<!--FORM-DATA CODE - THIS CONSISTS OF URL INPUT AND NO. OF SENTENCES INPUT IN BASE OF BLOG URL. -->
+<div class="col-md-12">
+    <div class="card-body mt-5">
+        <form id="bookingForm" method="POST" action="{{ url_for('split_data') }}"
+              class="needs-validation"
+              novalidate autocomplete="off">
+            {{ form.csrf_token }}
+
+            <!--SHOWS ERRORS IN BLOG URL INPUTS-->
+            {% if form.blog_url.errors %}
+            <ul class="alert alert-danger errors">
+                {% for error in form.blog_url.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <!--BLOG URL ERRORS ENDS-->
+
+            <!--BLOG URL INPUT FORM FIELD-->
+            <div class="form-outline mb-4 was-validated">
+                <label for="blog-url">Blog URL</label>
+                <div class="input-group mb-3 was-validated">
+                    <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i
+                                        class="fa fa-external-link"></i></span>
+                    </div>
+                    {{ form.blog_url(class_="form-control") }}
+                </div>
+            </div>
+            <!--BLOG URL INPUT FIELD ENDS-->
+
+            <!--SHOWS ERROR IN NUMBER OF SENTENCES INPUTS-->
+            {% if form.data_split_num.errors %}
+            <ul class="alert alert-danger mt-5 errors">
+                {% for error in form.data_split_num.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <!--SENTENCES RELATED ERRORS ENDS-->
+
+            <!--INTEGER FIELD FOR SENTENCES FORM FIELD-->
+            <div class="form-outline mb-4 was-validated">
+                <label for="data_split_num">No. of Sentences </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2"><i
+                                        class="fa fa-file-text-o"></i></span>
+                    </div>
+                    {{ form.data_split_num(class_="form-control col-md-4") }}
+                </div>
+            </div>
+            <!--SENTENCES FORM FIELD ENDS-->
+
+            <div class="row">
+                <!--SUBMIT BUTTON-->
+                <div class="col-lg-4 offset-lg-2 text-center">
+                    <button class="btn btn-primary btn-block" id="submitButton" type="submit">Submit
+                    </button>
+                </div>
+                <!--CLEAR BUTTON-->
+                <div class="col-lg-4 text-center">
+                    <button class="btn btn-danger btn-block" type="button"
+                            onclick="clearInput()">Clear
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--FORM-DATA ENDS-->
+
+<!--TABLE CONSISTING OF DIVISIED SENTENCES AND A BUTTON TO COPY EACH DATA ROW-->
+<div class="container">
+    {% if status == True %}
+    <h2 class="mt-4">Sliced Data</h2>
+    <div class="scrollit">
+        <table class="table table-hover table-striped table-bordered">
+            <thead style="position: sticky;top: 0">
+            <tr>
+                <th class="pr-5 header">Nos.</th>
+                <th class="header">Blog Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for blog_str in data_lst %}
+            <tr class="header_style">
+                <td>{{ loop.index }}</td>
+                <td id="blog_txt">{{ blog_str }}</td>
+                <td class="clipboard_card">
+                    <a style="float: right; font-size: 24px;" href="#" onclick="copyText(this)">
+                        <i class="fa fa-clipboard"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif status == False %}
+    <div class="card-header w-100 p-0 alert alert-danger">
+        <span class="card-body d-inline-block p-2">
+            <h3 class="card-title">Error</h3>
+            <p>Number of Sentences Exceeds Data Limit.</p>
+            <p>Max Sentences Available : {{ max_data }}</p>
+        </span>
+    </div>
+    {% else %}
+    <div></div>
+    {% endif %}
+</div>
+<!--TABLE STRUCTURE ENDS-->
+{% endblock content %}

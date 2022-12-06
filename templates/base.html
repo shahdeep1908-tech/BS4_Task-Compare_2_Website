@@ -108,8 +108,10 @@
                     <a class="nav-item nav-link active" href="{{ url_for('split_data') }}">Data Division <span
                             class="sr-only">(current)</span></a>
                 </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="{{ url_for('split_data_by_parts') }}">Data Division By Parts </a>
+                </div>
             </div>
-
         </nav>
         <!--NAVBAR ENDS-->
         {% block content %}
