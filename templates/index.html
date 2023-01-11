@@ -4,7 +4,7 @@
 <!--FORM DATA START-->
 <!--FORM-DATA CODE - THIS CONSISTS OF URL INPUTS FROM 2 DIFFERENT WEBSITES FOR COMPARISON. -->
 <div class="col-md-12">
-    <div class="card-body mt-5">
+    <div class="card-body mt-2">
         <form id="bookingForm" method="POST" action="{{ url_for('check_text') }}"
               class="needs-validation"
               novalidate autocomplete="off">
@@ -27,7 +27,7 @@
 
             <!--BLOG URL INPUT FORM FIELD-->
             <div class="form-outline mb-4 was-validated">
-                <label for="blog-url">Blog URL</label>
+                <label for="blog-url" class="h4">Blog URL</label>
                 <div class="input-group mb-3 was-validated">
                     <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i
@@ -39,38 +39,52 @@
             <!--BLOG URL INPUT FIELD ENDS-->
 
             <!--SHOWS ERROR IN JIDIPI URL INPUTS-->
-            {% if form.jidipi_url.errors %}
-            <ul class="alert alert-danger mt-5 errors">
-                {% for error in form.jidipi_url.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
             {% if flag == 'Invalid' and not jidipi_string %}
             <ul class="alert alert-danger mt-5 errors">
                 <li>This is Invalid URL</li>
+            </ul>
+            {% endif %}
+            {% if jidipi_error %}
+            <ul class="alert alert-danger mt-5 errors">
+                <li>This field is required.</li>
             </ul>
             {% endif %}
             <!--JIDIPI URL ERRORS ENDS-->
 
             <!--JIDIPI URL INPUT FORM FIELD-->
             <div class="form-outline mb-4 was-validated">
-                <label for="jidipi-url">JIDIPI URL</label>
+                <label for="jidipi-url" class="h4">JIDIPI URL</label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon2"><i
-                                        class="fa fa-external-link"></i></span>
+                        <span class="input-group-text" id="basic-addon2"><i
+                                class="fa fa-external-link"></i></span>
                     </div>
-                    {{ form.jidipi_url(class_="form-control") }}
+                    {{ form.jidipi_url(class_="form-control", onkeyup="sys_jidipi()") }}
                 </div>
             </div>
             <!--JIDIPI URL INPUT FIELD ENDS-->
 
+            <!--OR Condition to check any of JIDIPI URL-->
+            <div class="col-12 text-center">
+                <h3>OR</h3>
+            </div>
+
+            <!--ARCHITECTURES JIDIPI URL INPUT FORM FIELD-->
+            <div class="form-outline mb-4 was-validated">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3"><i
+                                class="fa fa-external-link"></i></span>
+                    </div>
+                    {{ form.arch_jidipi_url(class_="form-control", onkeyup="arch_jidipi()") }}
+                </div>
+            </div>
+            <!--ARCHITECTURES JIDIPI URL INPUT FIELD ENDS-->
+
             <div class="row">
                 <!--SUBMIT BUTTON-->
                 <div class="col-lg-4 offset-lg-2 text-center">
-                    <button class="btn btn-primary btn-block" id="submitButton" type="submit">Submit
-                    </button>
+                    <button class="btn btn-primary btn-block" id="submitButton" type="submit">Submit</button>
                 </div>
                 <!--CLEAR BUTTON-->
                 <div class="col-lg-4 text-center">

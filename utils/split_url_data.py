@@ -1,6 +1,8 @@
-from utils.scrap_data import get_blog_url_data
+from utils.scrap_data import get_blog_url_data, get_blog_url_data_by_parts, get_architizer_blog_url_data_by_parts
 import re, math
 import unicodedata
+
+from .extras import check_extra_dots
 
 
 def check_max_sentences(blog_txt, spliting_parts):
@@ -49,7 +51,7 @@ def check_max_sentences(blog_txt, spliting_parts):
     return True, sliced_data, ''
 
 
-def get_data_to_split(blog_url, data_split_num):
+def get_data_to_split(blog_url, data_split_num, name):
     """
     GET THE INPUT OF URL FROM WHICH DATA NEEDS TO BE SCRAPPED, AND THE NUMBER OF SENTENCES FOR SPLIT
 
@@ -62,17 +64,30 @@ def get_data_to_split(blog_url, data_split_num):
     """
     Get the Scraped Data from Scrap_data.py File.
     """
-    blog = get_blog_url_data(blog_url, headers)
+    if name == 'split_data_by_parts':
+        if "architizer.com" in blog_url:
+            blog = get_architizer_blog_url_data_by_parts(blog_url, headers)
+        else:
+            blog = get_blog_url_data_by_parts(blog_url, headers)
 
-    from .extras import check_extra_dots
-    get_data = check_extra_dots(blog)
+        check_extra_dots(blog)
+        lst = []
+        for blog_lst in blog:
+            lst.append(re.sub(r'(?<=[.,])(?=[^\s])', r' ', unicodedata.normalize("NFKD", ''.join(blog_lst).strip())))
+        if lst:
+            return True, lst
+        return False, lst
+    else:
+        blog = get_blog_url_data(blog_url, headers)
+
+        check_extra_dots(blog)
 
     """
     Eliminate extra spaces [If Any] using Regex.
     Unidecode data to remove ascii space.
     Convert the list into one whole paragraph.
     """
-    blog_txt = re.sub(r'(?<=[.,])(?=[^\s])', r' ', unicodedata.normalize("NFKD", ''.join(blog)))
+    blog_txt = re.sub(r'(?<=[.,])(?=[^\s])', r' ', unicodedata.normalize("NFKD", ''.join(blog).strip()))
 
     """
     Get the data checked for Max Sentences that can be made and return the data.

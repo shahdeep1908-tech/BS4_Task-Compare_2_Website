@@ -5,7 +5,7 @@
 <!--FORM-DATA CODE - THIS CONSISTS OF URL INPUT AND NO. OF SENTENCES INPUT IN BASE OF BLOG URL. -->
 <div class="col-md-12">
     <div class="card-body mt-5">
-        <form id="bookingForm" method="POST" action="{{ url_for('split_data') }}"
+        <form id="bookingForm" method="POST" action="{{ url_for('split_data_by_parts') }}"
               class="needs-validation"
               novalidate autocomplete="off">
             {{ form.csrf_token }}
@@ -33,29 +33,6 @@
             </div>
             <!--BLOG URL INPUT FIELD ENDS-->
 
-            <!--SHOWS ERROR IN NUMBER OF SENTENCES INPUTS-->
-            {% if form.data_split_num.errors %}
-            <ul class="alert alert-danger mt-5 errors">
-                {% for error in form.data_split_num.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <!--SENTENCES RELATED ERRORS ENDS-->
-
-            <!--INTEGER FIELD FOR SENTENCES FORM FIELD-->
-            <div class="form-outline mb-4 was-validated">
-                <label for="data_split_num">No. of Sentences </label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon2"><i
-                                        class="fa fa-file-text-o"></i></span>
-                    </div>
-                    {{ form.data_split_num(class_="form-control col-md-4") }}
-                </div>
-            </div>
-            <!--SENTENCES FORM FIELD ENDS-->
-
             <div class="row">
                 <!--SUBMIT BUTTON-->
                 <div class="col-lg-4 offset-lg-2 text-center">
@@ -74,44 +51,95 @@
 </div>
 <!--FORM-DATA ENDS-->
 
-<!--TABLE CONSISTING OF DIVISIED SENTENCES AND A BUTTON TO COPY EACH DATA ROW-->
-<div class="container">
-    {% if status == True %}
-    <h2 class="mt-4">Sliced Data</h2>
-    <div class="scrollit">
-        <table class="table table-hover table-striped table-bordered">
-            <thead style="position: sticky;top: 0">
-            <tr>
-                <th class="pr-5 header">Nos.</th>
-                <th class="header">Blog Data</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for blog_str in data_lst %}
-            <tr class="header_style">
-                <td>{{ loop.index }}</td>
-                <td id="blog_txt">{{ blog_str }}</td>
-                <td class="clipboard_card">
-                    <a style="float: right; font-size: 24px;" href="#" onclick="copyText(this)">
-                        <i class="fa fa-clipboard"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% elif status == False %}
-    <div class="card-header w-100 p-0 alert alert-danger">
-        <span class="card-body d-inline-block p-2">
-            <h3 class="card-title">Error</h3>
-            <p>Number of Sentences Exceeds Data Limit.</p>
-            <p>Max Sentences Available : {{ max_data }}</p>
-        </span>
-    </div>
-    {% else %}
-    <div></div>
-    {% endif %}
-</div>
-<!--TABLE STRUCTURE ENDS-->
 {% endblock content %}
+
+{% block division_content %}
+<hr>
+{% if status == True %}
+<div class="container-fluid">
+    <form id="blogForm" method="POST" action="{{ url_for('split_data_by_parts') }}"
+          class="needs-validation"
+          novalidate autocomplete="off">
+        {{ form1.csrf_token }}
+
+        <div class="scrollit-modal">
+            <table class="table table-hover">
+                <thead style="position: sticky;top: 0">
+                <tr>
+                    <th class="pr-5 header">Blog Paragraphs</th>
+                    <th class="header">Available Sentences</th>
+                    <th class="header">Divisive Into</th>
+                    <th class="header"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for idata,length_of_str in data_lst %}
+                <tr>
+                    <td width="60%">
+                        <textarea class="form-control" id="paragraph-{{loop.index}}" rows="7"
+                                  readonly>{{ idata }}</textarea>
+                    </td>
+                    <td width="10%">
+                        <input type="text" class="form-control" id="available_sentences-{{loop.index}}"
+                               value="{{ length_of_str }}" readonly/>
+                    </td>
+                    <td width="20%">
+                        <input class="form-control" id="data_division_num-{{loop.index}}" name="data_division_num"
+                               placeholder="Number of sentences you want!" required="" step="any" type="number"
+                               value="">
+                    </td>
+                    <td width="10%">
+                        <button class="btn btn-primary btn-block" id="getButton" type="button" data-toggle="modal"
+                                data-target="#exampleModalCenter"
+                                onclick="getTextareaText('paragraph-{{loop.index}}', 'available_sentences-{{loop.index}}', 'data_division_num-{{loop.index}}')">
+                            Get
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">List of Available Sentences
+                                            from Listed Paragraph</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="my-ID">
+                                        <div id="show-error" style="visibility: hidden"></div>
+                                        <div id="show-data">
+                                            <h2 class="mt-4">Sliced Data</h2>
+                                            <div class="scrollit">
+                                                <table class="table table-hover table-striped table-bordered">
+                                                    <thead style="position: sticky;top: 0">
+                                                    <tr>
+                                                        <th class="pr-5 header">Nos.</th>
+                                                        <th class="header">Blog Data</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="paragraph-tbody">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+{% endif %}
+{% endblock division_content %}

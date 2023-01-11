@@ -18,7 +18,67 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_blog_url_data(url, headers):
+def get_architizer_blog_url_data_by_parts(url, headers):
+    """
+    Scrape the data from Architizer Blog URL and return the List of Text.
+    :param url: Architizer Blog Data URL
+    :param headers: Chrome Header
+    :return: List of text
+    """
+    try:
+        response = requests.get(url, headers=headers).text
+        soup = BeautifulSoup(response, 'lxml')
+
+        required_punctuations = ['”', '’', '?', '.', '!']
+        blog_result = []
+        for parent_tag in soup.find_all("span", attrs={"class": "copy js-copy"}):
+            txt = re.sub(r'<.*?>', ' ', str(parent_tag))
+            txt = " ".join(txt.split())
+            if txt[-1] not in required_punctuations:
+                txt += '.'
+            blog_result.append([txt])
+            continue
+        return blog_result
+    except Exception as e:
+        return "Invalid URL"
+
+
+def get_blog_url_data_by_parts(url, headers):
+    """
+    Scrape the data from Blog URL and return the List of Text.
+
+    :param url: Blog Data URL
+    :param headers: Chrome Header
+    :return: List of text
+    """
+    try:
+        response = requests.get(url, headers=headers).text
+        soup = BeautifulSoup(response, 'lxml')
+
+        required_punctuations = ['”', '’', '?', '.', '!']
+        blog_result = []
+        for parent_tag in soup.find_all("article", attrs={"class": "afd-post-content"}):
+            for paragraph_tag in parent_tag.find_all("p"):
+                if not paragraph_tag.has_attr("class"):
+                    if bool(paragraph_tag.text):
+                        txt = paragraph_tag.text
+                        if paragraph_tag.text[-1] not in required_punctuations:
+                            txt += '.'
+                        blog_result.append([txt])
+                    continue
+                if paragraph_tag['class'][0] == 'p1' or paragraph_tag['class'][0] == 'Body':
+                    if bool(paragraph_tag.text):
+                        txt = paragraph_tag.text
+                        if paragraph_tag.text[-1] not in required_punctuations:
+                            txt += '.'
+                        blog_result.append([txt])
+                    continue
+        return blog_result
+    except Exception as e:
+        return "Invalid URL"
+
+
+def get_architizer_blog_url_data(url, headers):
     """
     Scrape the data from Blog URL and return the List of Text.
 
@@ -31,10 +91,45 @@ def get_blog_url_data(url, headers):
         soup = BeautifulSoup(response, 'lxml')
 
         blog_result = []
-        for parent_tag in soup.find_all(attrs={"id": "single-content"}):
+        for parent_tag in soup.find_all("span", attrs={"class": "copy js-copy"}):
+            txt = re.sub(r'<.*?>', ' ', str(parent_tag))
+            txt = " ".join(txt.split())
+            blog_result.append(txt)
+            continue
+        return blog_result
+    except Exception as e:
+        return "Invalid URL"
+
+
+def get_blog_url_data(url, headers):
+    """
+    Scrape the data from Blog URL and return the List of Text.
+
+    :param url: Blog Data URL
+    :param headers: Chrome Header
+    :return: List of text
+    """
+    try:
+        response = requests.get(url, headers=headers).text
+        soup = BeautifulSoup(response, 'lxml')
+
+        required_punctuations = ['”', '’', '?', '.', '!']
+        blog_result = []
+        for parent_tag in soup.find_all("article", attrs={"class": "afd-post-content"}):
             for paragraph_tag in parent_tag.find_all("p"):
                 if not paragraph_tag.has_attr("class"):
-                    blog_result.append(paragraph_tag.text)
+                    if bool(paragraph_tag.text):
+                        txt = paragraph_tag.text
+                        if paragraph_tag.text[-1] not in required_punctuations:
+                            txt += '.'
+                        blog_result.append(txt)
+                    continue
+                if paragraph_tag['class'][0] == 'p1' or paragraph_tag['class'][0] == 'Body':
+                    if bool(paragraph_tag.text):
+                        txt = paragraph_tag.text
+                        if paragraph_tag.text[-1] not in required_punctuations:
+                            txt += '.'
+                        blog_result.append(txt)
                     continue
         return blog_result
     except Exception as e:
@@ -43,7 +138,7 @@ def get_blog_url_data(url, headers):
 
 def get_system_jidipi_data(driver, url):
     """
-
+    Data from System JIDIPI website after login.
     :param driver: DRIVER OBJECT TO SCRAPE DATA FROM PAGE 2
     :param url: NEXT PAGE URL
     :return: LIST OF SENTENCES FETCHED FROM JIDIPI WEBSITE.
@@ -71,16 +166,22 @@ def get_jidipi_url_data(url):
     Scrape the data from Jidipi URL and return the List of Text.
 
     :param url: Jidipi URL
-    :param headers: Chrome Header
     :return: List of Jidipi para Text.
     """
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
 
-    options = webdriver.ChromeOptions()
-    options.headless = True
-    options.add_argument(f'user-agent={user_agent}')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-gpu')
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+    # options = webdriver.ChromeOptions()
+    # options.headless = True
+    # options.add_argument(f'user-agent={user_agent}')
+    # options.add_argument('--no-sandbox')
+    # options.add_argument('--disable-gpu')
 
     """
     Uncomment Below Code if any errors Related to Driver comes in action.
@@ -94,12 +195,11 @@ def get_jidipi_url_data(url):
     # options.add_argument("--start-maximized")
     # options.add_argument('--disable-dev-shm-usage')
 
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
     try:
         driver.get(url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "input-field ")))
-
         if driver.current_url == url:
             get_system_jidipi_data(driver, url)
         elif driver.current_url == "https://system.jidipi.com/login":
@@ -118,5 +218,36 @@ def get_jidipi_url_data(url):
             return jidipi_result
         else:
             return "Invalid URL"
+    except Exception as e:
+        return "Invalid URL"
+
+
+def get_arch_jidipi_url_data(url):
+    """
+    Scrape the data from Arch Jidipi URL and return the List of Text.
+    :param url: Jidipi URL
+    :return: List of Jidipi para Text.
+    """
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+
+    try:
+        response = requests.get(url, headers={'User-Agent': user_agent}).text
+        soup = BeautifulSoup(response, 'lxml')
+
+        jidipi_result = []
+        for parent_tag in soup.find_all("div", attrs={"class": ["valign-middle", "jdp-grid-col"]}):
+            for paragraph_tag in parent_tag.find_all("p", attrs={"class": "jdp-reset"}):
+                parent_tag = parent_tag.find("p").parent
+                flag = False
+                for check_element in parent_tag.contents:
+                    if check_element.find("strong") or check_element.find("h4"):
+                        flag = True
+                        continue
+                if not flag:
+                    cleaned_data = paragraph_tag.text
+                    if cleaned_data not in jidipi_result and len(cleaned_data) > 60:
+                        jidipi_result.append(cleaned_data)
+
+        return jidipi_result
     except Exception as e:
         return "Invalid URL"

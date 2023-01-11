@@ -81,6 +81,12 @@
             max-height: 500px;
         }
 
+        .scrollit-modal {
+            overflow-y: scroll;
+            height: fit-content;
+            max-height: 600px;
+        }
+
         .header {
             position: sticky;
             top: 0;
@@ -89,6 +95,20 @@
 
         .clipboard_card {
             background-color: white;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+        }
+
+        .modal-dialog {
+            max-width: 80%;
+        }
+
+        .errorlist {
+            list-style: none;
         }
     </style>
 </head>
@@ -104,12 +124,13 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <!--                <div class="navbar-nav">-->
+                <!--                    <a class="nav-item nav-link active" href="{{ url_for('split_data') }}">Data Division <span-->
+                <!--                            class="sr-only">(current)</span></a>-->
+                <!--                </div>-->
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="{{ url_for('split_data') }}">Data Division <span
-                            class="sr-only">(current)</span></a>
-                </div>
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="{{ url_for('split_data_by_parts') }}">Data Division By Parts </a>
+                    <a class="nav-item nav-link active" href="{{ url_for('split_data_by_parts') }}">Data Division By
+                        Parts </a>
                 </div>
             </div>
         </nav>
@@ -118,6 +139,9 @@
         {% endblock content %}
     </div>
 </div>
+
+{% block division_content %}
+{% endblock division_content %}
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -131,15 +155,76 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
+<!--SCRIPT TO DISABLE JIDIPI URL INPUT TEXTBOX TO AVAIL ONE AT A TIME-->
+<script>
+    function sys_jidipi() {
+        const txt = $("#jidipi_url").val();
+        if (txt !== "") {
+            document.getElementById("arch_jidipi_url").disabled = true;
+            document.getElementById("arch_jidipi_url").placeholder = ""
+        } else {
+            document.getElementById("arch_jidipi_url").disabled = false;
+        }
+    }
+
+    function arch_jidipi() {
+        const txt = $("#arch_jidipi_url").val()
+        if (txt !== "") {
+            document.getElementById("jidipi_url").disabled = true;
+        } else {
+            document.getElementById("jidipi_url").disabled = false;
+        }
+    }
+</script>
+
+<!--SCRIPT TO GET THE CONTENTS IN TEXTAREA INTO MODAL-->
+<script>
+    function getTextareaText(obj1, obj2, obj3) {
+        const searchValue = $("#" + obj1).val();
+        const max_limit = $("#" + obj2).val();
+        const get_limit = $("#" + obj3).val();
+        fetch("/split-data-by-parts", {
+            body: JSON.stringify({searchText: searchValue, limit: max_limit, new_limit: get_limit}),
+            method: "POST",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                document.getElementById("paragraph-tbody").innerHTML = ''
+                document.getElementById("show-error").style.visibility = 'hidden'
+                if (data == "Error") {
+                    document.getElementById("show-data").style.visibility = "hidden"
+                    document.getElementById("show-error").style.visibility = 'visible'
+                    document.getElementById("show-error").innerHTML = `
+                                                <div class="alert alert-danger">
+                                                    <p class="errorlist">MAX LIMIT EXCEEDED!</p>
+                                                </div>`
+                } else {
+                    document.getElementById("show-data").style.visibility = "visible"
+                    document.getElementById("show-error").style.visibility = "hidden"
+                    document.getElementById("show-error").style.display = 'none'
+                    let counter = 1;
+                    data.forEach((item) => {
+                        document.getElementById("paragraph-tbody").innerHTML += `<tr class="header_style">
+                                        <td>${counter}</td>
+                                        <td id="blog_txt">${item}</td>
+                                        <td class="clipboard_card">
+                                            <a style="float: right; font-size: 24px;" href="#" onclick="copyText(this)">
+                                            <i class="fa fa-clipboard"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
+                        counter += 1;
+                    });
+                }
+            })
+    }
+</script>
+
 <!--SCRIPT TO COPY THE CONTENT OF PARTICULAR ROW OF TABLE-->
 <script>
     function copyText(obj) {
-        var tmpInput = $("<input>");
-        $("body").append(tmpInput);
         var tdVal = $(obj).parent().prev().text();
-        tmpInput.val(tdVal).select();
-        document.execCommand("copy");
-        tmpInput.remove();
+        navigator.clipboard.writeText(tdVal)
     }
 </script>
 

@@ -1,7 +1,9 @@
 import re
 import unicodedata
 
-from utils.scrap_data import get_blog_url_data, get_jidipi_url_data
+from utils.scrap_data import get_blog_url_data, get_jidipi_url_data, get_arch_jidipi_url_data, \
+    get_architizer_blog_url_data
+from .extras import check_extra_dots
 
 
 def check_sequence_of_data(blog_txt_lst, jidipi_txt_lst):
@@ -30,12 +32,12 @@ def check_sequence_of_data(blog_txt_lst, jidipi_txt_lst):
     return seq_matcher == sorted(seq_matcher)
 
 
-def get_urls(blog_url, jidipi_url):
+def get_urls(blog_url, sys_jidipi_url, arch_jidipi_url):
     """
     FETCH THE SCRAPPED DATA AND PERFORM SPLIT AND STRIP BASED ON PARAGRAPH TO MAKE PERFECT SENTENCES.
 
     :param blog_url: LIST OF SENTENCES FROM BLOG URL.
-    :param jidipi_url: LIST OF SENTENCES FROM JIDIPI URL.
+    :param sys_jidipi_url: LIST OF SENTENCES FROM JIDIPI URL.
     :return: STATUS OF SEQUENCE AND TEXTS FROM BOTH URL FOR COMPARISON.
     """
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
@@ -43,11 +45,17 @@ def get_urls(blog_url, jidipi_url):
     """
     Get the Scraped Data from Scrap_data.py File.
     """
-    blog = get_blog_url_data(blog_url, headers)
-    jidipi = get_jidipi_url_data(jidipi_url)
+    if "architizer.com" in blog_url:
+        blog = get_architizer_blog_url_data(blog_url, headers)
+    else:
+        blog = get_blog_url_data(blog_url, headers)
 
-    from .extras import check_extra_dots
-    get_data = check_extra_dots(blog)
+    if sys_jidipi_url:
+        jidipi = get_jidipi_url_data(sys_jidipi_url)
+    else:
+        jidipi = get_arch_jidipi_url_data(arch_jidipi_url)
+
+    check_extra_dots(blog)
 
     if not blog and not jidipi or blog and jidipi == "Invalid URL" or not blog and jidipi == "Invalid URL" \
             or not jidipi and blog == "Invalid URL":
